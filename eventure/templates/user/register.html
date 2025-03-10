@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .register-container {
+      margin: auto;
+      border-radius: 8px;
+    }
+    .form-control:focus {
+      border-color: #6610f2;
+      box-shadow: 0 0 0 0.2rem rgba(102, 16, 242, 0.25);
+    }
+    .btn-primary {
+      background-color: #6610f2;
+      border-color: #6610f2;
+    }
+    .btn-primary:hover {
+      background-color: #5600e8;
+      border-color: #5600e8;
+    }
+    .full-height {
+      height: 100vh;
+    }
+    .image-container {
+      background-image: url('https://images.pexels.com/photos/976866/pexels-photo-976866.jpeg?cs=srgb&dl=pexels-joshsorenson-976866.jpg&fm=jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .form-label{
+        font-size:14px;
+    }
+    .registerForm{
+        width:300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row full-height">
+      <div class="col-md-6 image-container d-none d-md-block"></div>
+      <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="register-container">
+          <div class="d-flex text-center mt-4 mb-2">
+            <h3 class="text-primary mx-3">Welcome To</h3>
+            <a href="/">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Haven_Holiday_Wordmark.svg/1280px-Haven_Holiday_Wordmark.svg.png" alt="Haven Holiday" class="img-fluid" style="height: 30px;">
+            </a>
+          </div>
+          <h3 class="text-center mb-2">Register</h3>
+          {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          {% endfor %}
+      {% endif %}
+          <form id="registerForm" class="w-100">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" name="full_name" placeholder="John Doe" required>
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="johndoe" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email ID</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirm_password" placeholder="Confirm your password" required>
+            </div>
+            <div class="d-flex justify-content-end mb-3">
+              <a href="/login" class="text-primary">Already have an account?</a>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 my-3">Register</button>
+          </form>
+          {% comment %} <div class="text-center my-3">
+            By signing up, you agree to our <a href="/terms" class="text-primary">Terms & Conditions</a>
+          </div> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+  
+      const fullName = document.getElementById('fullName').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+  
+      // Check if passwords match
+      if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+      }
+  
+      // Get CSRF token
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  
+      // Simulate API request for registration
+      fetch('http://127.0.0.1:8000/register/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken  // Include CSRF token in the headers
+          },
+          body: JSON.stringify({
+              full_name: fullName,
+              username: username,
+              email: email,
+              password: password,
+              confirm_password: confirmPassword  // Include confirm_password
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert('We have sent an OTP to the entered email. Please check your inbox.');
+              window.location.href = data.redirect_url;  // Navigate to the OTP verification page
+          } else {
+              alert('Registration failed: ' + (data.error || 'Please try again.'));
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('Something went wrong. Please try again later.');
+      });
+  });
+</script>
+
+</body>
+</html>

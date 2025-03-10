@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details - Haven</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .event-details {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .event-details h2 {
+            color: #d63384;
+            margin-bottom: 20px;
+            animation: slideInDown 1s ease-in-out;
+        }
+        .event-details img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: zoomIn 1s ease-in-out;
+        }
+        .event-details p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .event-details .btn-primary {
+            background-color: #d63384;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+        .event-details .btn-primary:hover {
+            background-color: #b82a6d;
+        }
+        .navbar {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+        }
+        .navbar-nav .nav-item {
+            font-weight: 500;
+            font-size: 16px;
+        }
+        .navbar-nav .nav-link {
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #d63384;
+        }
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+        .navbar-toggler {
+            border: none;
+            outline: none;
+        }
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        .login-btn {
+            font-weight: bold;
+            color: #fff;
+            background-color: #d63384;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+        .login-btn:hover {
+            background-color: #b82a6d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="text-2xl font-bold text-pink-600 ">Eventure</a>
+    
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_page' %}">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_profile' %}">profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Events
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'event_list' %}">Active Events</a></li>
+                            {% if request.session.is_logged_in and request.session.is_subscribed %}
+                                <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Create Event</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+           
+            <!-- Right-aligned login button -->
+            <div class="d-flex">
+                {% if request.session.is_logged_in %}
+                    <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
+                    <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <!-- Subscription Modal -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subscriptionModalLabel">Subscription Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">You need to subscribe to create events. Click the button below to subscribe.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="subscribeButton" href="{% url 'subscription' %}" class="btn btn-primary">Subscribe Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Event Details Section -->
+    <div class="event-details">
+        <h2 class="animate__animated animate__slideInDown font-bold text-3xl">{{ event.title }}</h2>
+
+
+        {% if event.image %}
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="animate__animated animate__zoomIn">
+        {% endif %}
+        <p><strong>Description:</strong> {{ event.description }}</p>
+        <p><strong>Organizer:</strong> {{ event.organizer.username }}</p>
+        <p><strong>Date:</strong> {{ event.date }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+        <p><strong>Category:</strong> {{ event.get_category_display }}</p>
+        <p><strong>Ticket Count:</strong> {{ event.ticket_count }}</p>
+        <p><strong>Price:</strong> ₹{{ event.price }}</p>
+        <button id="bookNowBtn" class="btn btn-primary animate__animated animate__fadeInUp" data-bs-toggle="modal" data-bs-target="#bookingModal">Book Now</button>
+    </div>
+        <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingModalLabel">Book Tickets for {{ event.title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="bookingForm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="ticket_count" class="form-label">Number of Tickets:</label>
+                                <input type="number" id="ticket_count" name="ticket_count" class="form-control" min="1"  required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Razorpay Payment Script -->
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            // Handle Form Submission
+            document.getElementById('bookingForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+        
+                const ticketCount = document.getElementById('ticket_count').value;
+                const eventId = "{{ event.id }}";
+                const price = "{{ event.price }}";
+                const amount = ticketCount * price * 100; // Amount in paise
+        
+                // Create Razorpay Order
+                fetch("{% url 'ticket_create_razorpay_order' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        event_id: eventId,
+                        ticket_count: ticketCount,
+                        amount: amount,
+                    }),
+                })
+                .then(response => {
+                    if (response.status === 403) {
+                        // User is not logged in, show SweetAlert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Login Required',
+                            text: 'You need to be logged in to book tickets.',
+                            confirmButtonText: 'OK'
+                        });
+                        return Promise.reject('User not logged in');
+                    }
+                    if (!response.ok) {
+                        // Handle backend errors (e.g., event passed, tickets sold out)
+                        return response.json().then(errorData => {
+                            return Promise.reject(errorData.error);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const options = {
+                        key: "{{ RAZORPAY_KEY_ID }}",
+                        amount: data.amount,
+                        currency: "INR",
+                        order_id: data.order_id,
+                        handler: function (response) {
+                            // Handle Payment Success
+                            fetch("{% url 'ticket_payment_success' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': '{{ csrf_token }}',
+                                },
+                                body: JSON.stringify({
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    event_id: eventId,
+                                    ticket_count: ticketCount,
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    window.location.href = "{% url 'booking_success' %}";
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Failed',
+                                        text: 'Payment failed. Please try again.',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            });
+                        },
+                    };
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                })
+                .catch(error => {
+                    // Display backend error messages using SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error || 'An error occurred. Please try again.',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error('Error:', error);
+                });
+            });
+        </script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const subscribeButton = document.getElementById('subscribeButton');
+            const modalMessage = document.getElementById('modalMessage');
+        
+            // Check if the user is logged in
+            const isLoggedIn = {% if request.session.is_logged_in %}true{% else %}false{% endif %};
+        
+            if (!isLoggedIn) {
+                // If the user is not logged in, update the modal message and button behavior
+                modalMessage.textContent = 'Please log in to subscribe and create events.';
+                subscribeButton.textContent = 'Log In';
+                subscribeButton.href = "{% url 'login' %}";
+            } else {
+                // If the user is logged in, proceed to the subscription page
+                subscribeButton.textContent = 'Subscribe Now';
+                subscribeButton.href = "{% url 'subscription' %}";
+            }
+        });
+        </script>
+        <script>
+            // Function to show the popup
+            function showPopup(message, type) {
+                const popup = document.getElementById('popup');
+                const popupMessage = document.getElementById('popup-message');
+    
+                // Set the message and style based on type
+                popupMessage.textContent = message;
+                popup.className = `popup ${type}`; // Add type class (e.g., success, error)
+                popup.style.display = 'block';
+    
+                // Automatically close the popup after 5 seconds
+                setTimeout(() => {
+                    closePopup();
+                }, 5000);
+            }
+    
+            // Function to close the popup
+            function closePopup() {
+                const popup = document.getElementById('popup');
+                popup.style.display = 'none';
+            }
+    
+            // Check for Django messages and display them
+            {% if messages %}
+                {% for message in messages %}
+                    showPopup("{{ message }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+    </body>
+    </html>

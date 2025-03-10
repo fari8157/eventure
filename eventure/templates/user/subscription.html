@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .checkmark-icon {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            color: #10b981; /* Emerald color */
+        }
+        .subscription-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .subscription-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .subscription-card .price {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .subscription-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .subscription-card ul li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .subscription-card ul li span {
+            margin-left: 0.75rem;
+        }
+        .payment-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .payment-popup-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .navbar {
+            background-color: #fff; /* Clean white background */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+        }
+    
+        .navbar-nav .nav-item {
+            font-weight: 500;
+            font-size: 16px;
+        }
+    
+        .navbar-nav .nav-link {
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+    
+        .navbar-nav .nav-link:hover {
+            color: #d63384; /* Accent color on hover */
+        }
+    
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px; /* Spacing between nav items */
+        }
+    
+        .navbar-toggler {
+            border: none;
+            outline: none;
+        }
+    
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    
+        .login-btn {
+            font-weight: bold;
+            color: #fff;
+            background-color: #d63384;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+    
+        .login-btn:hover {
+            background-color: #b82a6d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand mx-3" href="#">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc9M4Kuo2EWy178PsTfFkuYg0wkVpCwNMfXA&s" alt="Logo">
+            </a>
+    
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                </ul>
+            </div>
+    
+            <!-- Right-aligned login button -->
+            <div class="d-flex">
+                <a href="#" class="login-btn text-decoration-none">Log in</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Subscription Section -->
+    <div class="container mt-5">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold">Subscription</h2>
+            <p class="mt-4 text-xl">Discover Your Haven: Craft a Membership Tailored for You</p>
+        </div>
+        <div class="row mt-5">
+            <!-- Basic Subscription -->
+            <div class="col-md-6 mb-4">
+                <div class="subscription-card">
+                    <h3>Basic</h3>
+                    <p class="price">₹100<span class="text-xl">/month</span></p>
+                    <p>You want to be part of the association</p>
+                    <ul>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Submit Events</span>
+                        </li>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Post Events</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-success mt-4 w-100">Pay with Razorpay</button>
+                </div>
+            </div>
+
+            <!-- Premium Subscription -->
+            {% comment %} <div class="col-md-6 mb-4">
+                <div class="subscription-card">
+                    <h3>Premium</h3>
+                    <p class="price">₹200<span class="text-xl">/month</span></p>
+                    <p>You just want to discover</p>
+                    <ul>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Submit Events</span>
+                        </li>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Post Events</span>
+                        </li>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Group Chat</span>
+                        </li>
+                        <li>
+                            <svg class="checkmark-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Discount on bookings</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-success mt-4 w-100">Pay with Razorpay</button>
+                </div>
+            </div> {% endcomment %}
+        </div>
+    </div>
+
+    <!-- Payment Success Popup -->
+    <div id="paymentPopup" class="payment-popup" style="display: none;">
+        <div class="payment-popup-content">
+            <h2 class="text-2xl font-semibold">Payment Successful</h2>
+            <p class="mt-4">Your payment was successful, and your subscription has been updated.</p>
+            <button class="btn btn-success mt-4" onclick="handleLogout()">Sign Out</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+   
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const payButton = document.querySelector('.btn-success');
+    payButton.addEventListener('click', function () {
+        // Fetch Razorpay order details from the server
+        fetch('/create-razorpay-order/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Open Razorpay checkout
+            const options = {
+                key: '{{ RAZORPAY_API_KEY }}', // Replace with your Razorpay API key
+                amount: data.amount,
+                currency: data.currency,
+                order_id: data.id,
+                name: 'Haven Subscription',
+                description: 'Basic Subscription Plan',
+                handler: function (response) {
+                    // Handle payment success
+                    fetch('/payment-success/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Show success message
+                            Swal.fire({
+                                title: 'Payment Successful!',
+                                text: 'Your subscription has been activated.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Redirect to home or another page
+                                window.location.href = '/';
+                            });
+                        }
+                    });
+                },
+                theme: {
+                    color: '#10b981' // Emerald color
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+        });
+    });
+});
+</script>
+</body>
+</html>

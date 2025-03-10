@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event - Haven</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .event-form {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .event-form h2 {
+            color: #d63384;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #d63384;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #b82a6d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="event-form">
+        <h2>Edit Event</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ event.title }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required>{{ event.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Event Date</label>
+                <input type="datetime-local" class="form-control" id="date" name="date" value="{{ event.date|date:"Y-m-d\TH:i" }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="price" name="price" value="{{ event.price }}" step="0.01" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="ticket_count" class="form-label">Ticket Count</label>
+                <input type="number" class="form-control" id="ticket_count" name="ticket_count" value="{{ event.ticket_count }}" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="music" {% if event.category == 'music' %}selected{% endif %}>Music</option>
+                    <option value="sports" {% if event.category == 'sports' %}selected{% endif %}>Sports</option>
+                    <option value="art" {% if event.category == 'art' %}selected{% endif %}>Art</option>
+                    <option value="tech" {% if event.category == 'tech' %}selected{% endif %}>Technology</option>
+                    <option value="food" {% if event.category == 'food' %}selected{% endif %}>Food & Drink</option>
+                    <option value="other" {% if event.category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Event Image</label>
+                <input type="file" class="form-control" id="image" name="image">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="Current Image" class="mt-2" style="max-width: 100%; height: auto;">
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Update Event</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelector('form').onsubmit = function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        fetch('{% url "edit_event" event.id %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Event Updated',
+                      text: data.message,
+                  }).then(() => {
+                      window.location.href = "{% url 'event_list' %}";
+                  });
+              } else {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: data.message,
+                  });
+              }
+          }).catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Something went wrong!',
+              });
+          });
+    };
+</script>
+
+</body>
+</html>

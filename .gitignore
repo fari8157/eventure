@@ -1,0 +1,6 @@
+
+env/
+settings.py
+db.sqlite3
+media/
+staticfiles/

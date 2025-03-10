@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haven</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .carousel-image {
+            height: 400px;
+            object-fit: cover;
+        }
+        .event-card {
+            margin: 20px 0;
+        }
+        .event-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+    
+        .event-card:hover {
+            transform: scale(1.02);
+        }
+    
+        .event-card h6 {
+            color: #d63384;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    
+        .event-card h4 {
+            font-weight: 700;
+            color: #333;
+        }
+    
+        .event-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+    
+        .event-card .btn-danger {
+            background-color: #d63384;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+    
+        .event-card .btn-danger:hover {
+            background-color: #b82a6d;
+        }
+    
+        .event-card img {
+            border-radius: 10px;
+        }
+    
+        .event-card .position-relative {
+            overflow: hidden;
+            border-radius: 10px;
+        }
+    
+        .event-card .btn-explore {
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .navbar {
+            background-color: #fff; /* Clean white background */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+        }
+    
+        .navbar-nav .nav-item {
+            font-weight: 500;
+            font-size: 16px;
+        }
+    
+        .navbar-nav .nav-link {
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+    
+        .navbar-nav .nav-link:hover {
+            color: #d63384; /* Accent color on hover */
+        }
+    
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px; /* Spacing between nav items */
+        }
+    
+        .navbar-toggler {
+            border: none;
+            outline: none;
+        }
+    
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    
+        .login-btn {
+            font-weight: bold;
+            color: #fff;
+            background-color: #d63384;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+    
+        .login-btn:hover {
+            background-color: #b82a6d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand mx-3" href="#">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc9M4Kuo2EWy178PsTfFkuYg0wkVpCwNMfXA&s" alt="Logo">
+            </a>
+    
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                </ul>
+            </div>
+           
+            <!-- Right-aligned login button -->
+            <div class="d-flex">
+                {% if request.session.is_logged_in %}
+                <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
+                <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+               
+                {% else %}
+                <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+            {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Image Carousel -->
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZXZlbnR8ZW58MHx8MHx8fDA%3D" class="d-block w-100 carousel-image" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://cdn.prod.website-files.com/5726ee0d78d342c0529ee26c/57901dea34f0e4a2603810d6_photographer-1209069_1920.jpg" class="d-block w-100 carousel-image" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXmVV-zpJ_dXEg0JOc7fr55zI1GW9wdVqsBQM7i_qa1dD9IdCYLtZFMCUR6EfQgb2TW6E&usqp=CAU" class="d-block w-100 carousel-image" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Events Section -->
+    <div class="container mt-4">
+        <h2 class="text-center fw-bold my-5">OUR EVENTS</h2>
+        
+        <div class="row event-card align-items-center">
+            <div class="col-md-8">
+                <h6>Exciting Events</h6>
+                <h4>Join the Buzz: Lyft Launches Innovative Cross-Platform Service This Week!</h4>
+                <p>Get ready for a groundbreaking event! Lyft is set to launch a cross-platform service this week, 
+                revolutionizing the way we experience transportation. Don't miss out on being part of this momentous 
+                occasion that promises to redefine the future of travel.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsl6jz8XPgh4jAi5AxoW090Xvq803C2xwKanaoB_4eaUqouDUSfRs1_MQd3V3PeRpYeXo&usqp=CAU" 
+                        class="img-fluid" alt="Event Image">
+                    <a href="#" class="btn btn-danger position-absolute btn-explore">Explore More</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-center fw-bold my-5">UPCOMING EVENTS</h2>
+        <div class="row event-card">
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsl6jz8XPgh4jAi5AxoW090Xvq803C2xwKanaoB_4eaUqouDUSfRs1_MQd3V3PeRpYeXo&usqp=CAU" 
+                         class="img-fluid" alt="Event Image">
+                    <a href="#" class="btn btn-danger position-absolute start-50 translate-middle-x" 
+                       style="bottom: 10px; left: 50%; transform: translateX(-50%);">Explore More</a>
+                </div>
+            </div>            
+            <div class="col-md-8">
+                <h6 class="text-pink-500">Upcoming Events</h6>
+                <h4>Don't Miss Out! Lyft's Unveiling the Future with a Cross-Platform Service</h4>
+                <p>Brace yourself for an extraordinary event! Lyft is gearing up to launch an innovative cross-platform service this week. Join us as we unveil a new era in transportation that goes beyond the ordinary. Experience the future firsthand and be part of the journey!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-4 mt-4">
+        <p>&copy; 2023 Haven. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .event-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .event-date {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .event-price {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .event-details {
+            padding: 16px;
+            background: white;
+        }
+        .event-details h5 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        .event-details p {
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+        .event-button {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #d63384;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0 0 12px 12px;
+            transition: background 0.3s ease;
+        }
+        .event-button:hover {
+            background: #e91e63;
+        }
+        .navbar {
+            background-color: #fff; /* Clean white background */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+        }
+    
+        .navbar-nav .nav-item {
+            font-weight: 500;
+            font-size: 16px;
+        }
+    
+        .navbar-nav .nav-link {
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+    
+        .navbar-nav .nav-link:hover {
+            color: #d63384; /* Accent color on hover */
+        }
+    
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px; /* Spacing between nav items */
+        }
+    
+        .navbar-toggler {
+            border: none;
+            outline: none;
+        }
+    
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    
+        .login-btn {
+            font-weight: bold;
+            color: #fff;
+            background-color: #d63384;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+    
+        .login-btn:hover {
+            background-color: #b82a6d;
+        }
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #d63384;
+            object-fit: cover;
+        }
+        .profile-details {
+            font-size: 18px;
+            color: #2d3748;
+        }
+        .profile-details span {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .edit-button {
+            background-color: #d63384;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .edit-button:hover {
+            background-color: #b82a6d;
+        }
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 400px;
+        }
+        .popup input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .popup button {
+            background-color: #d63384;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .popup button:hover {
+            background-color: #b82a6d;
+        }
+
+    </style>
+</head>
+<body class="bg-pink-50">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="text-2xl font-bold text-pink-600 "style="text-decoration: none">Eventure</a>
+    
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_page' %}">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_profile' %}">profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Events
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'event_list' %}">Active Events</a></li>
+                            {% if request.session.is_logged_in and request.session.is_subscribed %}
+                                <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Create Event</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+           
+            <!-- Right-aligned login button -->
+            <div class="d-flex">
+                {% if request.session.is_logged_in %}
+                    <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
+                    <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <!-- Subscription Modal -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subscriptionModalLabel">Subscription Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">You need to subscribe to create events. Click the button below to subscribe.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="subscribeButton" href="{% url 'subscription' %}" class="btn btn-primary">Subscribe Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup" class="popup">
+    <span id="popup-message"></span>
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+</div>
+    <div class="container mx-auto p-4">
+        <!-- Profile Section -->
+        <div class="bg-white rounded-lg shadow-lg p-4 animate__animated animate__fadeIn">
+            <div class="flex flex-col md:flex-row items-start justify-between">
+                <!-- User Details -->
+                <div class="flex items-center space-x-4">
+                    <!-- Profile Picture -->
+                    <div class="relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-pink-500 bg-gray-200 overflow-hidden">
+                        {% if user_profile.image %}
+                            <img id="profileImage" src="{{ user_profile.image.url }}" alt="Profile Picture" class="w-full h-full object-cover">
+                        {% else %}
+                            <!-- FontAwesome User Icon (If no image available) -->
+                            <i id="defaultIcon" class="fas fa-user text-gray-500 text-5xl"></i>
+                        {% endif %}
+                    
+                        <!-- Upload Button (Always Visible) -->
+                        <button onclick="openFileUpload()" 
+                                class="absolute bottom-2 right-2 bg-pink-500 text-white rounded-full p-2 hover:bg-pink-600 transition duration-300 shadow-lg z-10">
+                            <i class="fas fa-camera text-sm"></i>
+                        </button>
+                    
+                        <input type="file" id="fileUpload" class="hidden" onchange="updateProfileImage(event)">
+                    </div>
+                    
+                    
+                    <!-- User Info -->
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold">Fullname: <span id="fullName">{{ user_profile.full_name }}</span></h1>
+                        <p class="text-gray-600 text-sm md:text-base">Username: {{ user_profile.username }}</p>
+                        <p class="text-gray-600 text-sm md:text-base">Email: {{ user_profile.email }}</p>
+                        <p id="phoneNumber" class="text-gray-600 text-sm md:text-base">Phone Number: {{ user_profile.phone_number }}</p>
+                        <button onclick="editUserDetails()" class="mt-1 text-pink-500 hover:text-pink-600 text-sm md:text-base">Edit Details</button>
+                    </div>
+                    
+                </div>
+
+                <!-- Subscription Status -->
+                <div class="bg-pink-50 p-4 rounded-lg border border-pink-200 mt-4 md:mt-0">
+                    <h2 class="text-md md:text-lg font-bold text-pink-800">Subscription Status</h2>
+                    <p class="text-gray-600 text-xs md:text-sm">Current Plan: <span class="font-bold text-pink-600">{% if user_profile.is_subscribed %}Premium{% else %}Free{% endif %}</span></p>
+                    <p class="text-gray-600 text-xs md:text-sm">Expiry Date: <span class="font-bold text-pink-600">{% if user_profile.active_subscription %}{{ user_profile.active_subscription.date|date:"Y-m-d" }}{% else %}N/A{% endif %}</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="mt-4 flex space-x-2">
+            <button onclick="showSection('events')" class="px-3 py-1 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-300 text-xs md:text-sm">My Events</button>
+            <button onclick="showSection('bookedEvents')" class="px-3 py-1 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-300 text-xs md:text-sm">Booked Events</button>
+            <button onclick="showSection('subscriptionHistory')" class="px-3 py-1 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-300 text-xs md:text-sm">Subscription History</button>
+        </div>
+
+        <!-- My Events Section -->
+      <!-- My Events Section -->
+<!-- My Events Section -->
+<div id="events" class="mt-4 hidden">
+    <h2 class="text-lg font-bold text-pink-800 mb-4">My Events</h2>
+    {% if user_profile.organized_events.all %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-pink-200">
+                <thead>
+                    <tr class="bg-pink-50">
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Sl No</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Image</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Title</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Category</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Location</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Total Sold Tickets</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Per Ticket Cost</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Total Revenue</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in organized_events %}
+                    <tr class="hover:bg-pink-50 transition duration-300">
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ forloop.counter }}</td>
+                        <td class="px-4 py-2">
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-16 h-16 object-cover rounded-lg">
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ event.title }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ event.get_category_display }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ event.location }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ event.total_tickets_sold|default:0 }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">₹{{ event.price }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">₹{{ event.total_revenue|default:0 }}</td>
+                        
+                            <td class="px-4 py-2 text-sm text-gray-600">
+                                {% if event.date > now and event.total_tickets_sold == 0 %}
+                                    <a href="{% url 'edit_event' event.id %}" class="text-pink-500 hover:text-pink-600">Edit</a>
+                                {% else %}
+                                    <span class="text-gray-400">Non-Editable</span>
+                                {% endif %}
+                            </td>
+                            
+                        
+                    </tr>
+                {% endfor %}
+                
+                
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-600 text-center">No events found. Please subscribe to create your event.</p>
+    {% endif %}
+</div>
+
+        <!-- Booked Events Section -->
+        <div id="bookedEvents" class="mt-4 hidden">
+            <h2 class="text-lg font-bold text-pink-800 mb-4">Booked Events</h2>
+            {% if user_profile.tickets.all %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-pink-200">
+                        <thead>
+                            <tr class="bg-pink-50">
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Event Title</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Price</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Location</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Booked Date</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Booking Time</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Ticket Count</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in user_profile.tickets.all %}
+                            <tr class="hover:bg-pink-50 transition duration-300">
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ ticket.event.title }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">₹{{ ticket.event.price }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ ticket.event.location }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ ticket.booking_date|date:"d M Y" }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ ticket.booking_date|time:"g:i A" }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ ticket.ticket_count }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">₹{{ ticket.amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-600 text-center">No booked events found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Subscription History Section -->
+        <div id="subscriptionHistory" class="mt-4">
+            <h2 class="text-lg font-bold text-pink-800">Subscription History</h2>
+            {% if user_profile.subscriptions.all %}
+                <div class="mt-2 overflow-x-auto">
+                    <table class="min-w-full bg-white border border-pink-200">
+                        <thead>
+                            <tr class="bg-pink-50">
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Plan</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Start Date</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">End Date</th>
+                                <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subscription in user_profile.subscriptions.all %}
+                            <tr class="hover:bg-pink-50 transition duration-300">
+                                <td class="px-4 py-2 text-sm text-gray-600">Premium</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ subscription.date|date:"Y-m-d" }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{% if subscription.date %}{{ subscription.date|date:"Y-m-d" }}{% else %}N/A{% endif %}</td>
+                                <td class="px-4 py-2 text-sm text-pink-600 font-bold">Paid</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-600 text-center">No subscription history found.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Function to open file upload dialog
+        function openFileUpload() {
+            document.getElementById('fileUpload').click();
+        }
+        
+        function updateProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append("image", file);
+        
+                // Use AJAX to send the image to the backend
+                fetch("{% url 'update_profile_image' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // CSRF Token
+                    },
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update profile image preview
+                        document.getElementById('profileImage').src = data.image_url;
+                        
+                        // Show SweetAlert success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Profile Picture Updated!',
+                            text: 'Your profile picture has been updated successfully.',
+                        });
+                    } else {
+                        // Show SweetAlert error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Update Failed',
+                            text: data.message || 'Something went wrong while updating your profile picture.',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while uploading the image.',
+                    });
+                });
+            }
+        }
+        
+
+        // Function to edit phone number
+        function editUserDetails() {
+            // Display SweetAlert with input fields for both fullname and phone number
+            Swal.fire({
+                title: 'Edit Profile Details',
+                html: `
+                    <div>
+                        <input id="swal-fullname" class="swal2-input" placeholder="Full Name" value="${document.getElementById('fullName').textContent}">
+                        <input id="swal-phone" class="swal2-input" placeholder="Phone Number" value="${document.getElementById('phoneNumber').textContent.replace('Phone Number: ', '')}">
+                    </div>`,
+                focusConfirm: false,
+                preConfirm: () => {
+                    const fullname = document.getElementById('swal-fullname').value;
+                    const phoneNumber = document.getElementById('swal-phone').value;
+        
+                    if (!fullname || !phoneNumber) {
+                        Swal.showValidationMessage('Both fields are required');
+                        return false;
+                    }
+                    return { fullname, phoneNumber };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const { fullname, phoneNumber } = result.value;
+        
+                    // Send the data to the backend
+                    fetch("{% url 'update_profile_details' %}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({
+                            fullname: fullname,
+                            phone_number: phoneNumber,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update frontend with new data
+                            document.getElementById('fullName').textContent = data.fullname;
+                            document.getElementById('phoneNumber').textContent = `Phone Number: ${data.phone_number}`;
+        
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Profile Updated!',
+                                text: 'Your profile details have been updated successfully.',
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Update Failed',
+                                text: data.message || 'Something went wrong while updating your profile details.',
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while updating your profile details.',
+                        });
+                    });
+                }
+            });
+        }
+        
+
+        // Function to show/hide sections
+        function showSection(sectionId) {
+            const sections = ['events', 'bookedEvents', 'subscriptionHistory'];
+            sections.forEach(id => {
+                const element = document.getElementById(id);
+                if (id === sectionId) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const subscribeButton = document.getElementById('subscribeButton');
+            const modalMessage = document.getElementById('modalMessage');
+        
+            // Check if the user is logged in
+            const isLoggedIn = {% if request.session.is_logged_in %}true{% else %}false{% endif %};
+        
+            if (!isLoggedIn) {
+                // If the user is not logged in, update the modal message and button behavior
+                modalMessage.textContent = 'Please log in to subscribe and create events.';
+                subscribeButton.textContent = 'Log In';
+                subscribeButton.href = "{% url 'login' %}";
+            } else {
+                // If the user is logged in, proceed to the subscription page
+                subscribeButton.textContent = 'Subscribe Now';
+                subscribeButton.href = "{% url 'subscription' %}";
+            }
+        });
+        </script>
+        <script>
+            // Function to show the popup
+            function showPopup(message, type) {
+                const popup = document.getElementById('popup');
+                const popupMessage = document.getElementById('popup-message');
+    
+                // Set the message and style based on type
+                popupMessage.textContent = message;
+                popup.className = `popup ${type}`; // Add type class (e.g., success, error)
+                popup.style.display = 'block';
+    
+                // Automatically close the popup after 5 seconds
+                setTimeout(() => {
+                    closePopup();
+                }, 5000);
+            }
+    
+            // Function to close the popup
+            function closePopup() {
+                const popup = document.getElementById('popup');
+                popup.style.display = 'none';
+            }
+    
+            // Check for Django messages and display them
+            {% if messages %}
+                {% for message in messages %}
+                    showPopup("{{ message }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+</body>
+</html>

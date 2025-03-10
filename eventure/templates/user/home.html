@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haven</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        .carousel-image {
+            height: 400px;
+            object-fit: cover;
+        }
+        .event-card {
+            margin: 20px 0;
+        }
+        .event-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+    
+        .event-card:hover {
+            transform: scale(1.02);
+        }
+    
+        .event-card h6 {
+            color: #d63384;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    
+        .event-card h4 {
+            font-weight: 700;
+            color: #333;
+        }
+    
+        .event-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+    
+        .event-card .btn-danger {
+            background-color: #d63384;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+    
+        .event-card .btn-danger:hover {
+            background-color: #b82a6d;
+        }
+    
+        .event-card img {
+            border-radius: 10px;
+        }
+    
+        .event-card .position-relative {
+            overflow: hidden;
+            border-radius: 10px;
+        }
+    
+        .event-card .btn-explore {
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .navbar {
+            background-color: #fff; /* Clean white background */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+        }
+    
+        .navbar-nav .nav-item {
+            font-weight: 500;
+            font-size: 16px;
+        }
+    
+        .navbar-nav .nav-link {
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+    
+        .navbar-nav .nav-link:hover {
+            color: #d63384; /* Accent color on hover */
+        }
+    
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px; /* Spacing between nav items */
+        }
+    
+        .navbar-toggler {
+            border: none;
+            outline: none;
+        }
+    
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    
+        .login-btn {
+            font-weight: bold;
+            color: #fff;
+            background-color: #d63384;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+    
+        .login-btn:hover {
+            background-color: #b82a6d;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff69b4; /* Pink color */
+            color: white;
+            padding: 25px; /* Increased padding */
+            border-radius: 15px; /* Larger border radius */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+            width: 350px; /* Increased width */
+            font-size: 18px; /* Larger font size */
+        }
+
+        .popup.success {
+            background-color: #4caf50; /* Green for success messages */
+        }
+
+        .popup.error {
+            background-color: #f44336; /* Red for error messages */
+        }
+
+        .popup.warning {
+            background-color: #ff9800; /* Orange for warning messages */
+        }
+
+        .popup.info {
+            background-color: #2196f3; /* Blue for info messages */
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            cursor: pointer;
+            font-size: 24px; /* Larger close button */
+        }
+
+        .close-btn:hover {
+            color: #ffeb3b; /* Yellow on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="text-2xl font-bold text-pink-600 ">Eventure</a>
+    
+            <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_page' %}">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_profile' %}">profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Events
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'event_list' %}">Active Events</a></li>
+                            {% if request.session.is_logged_in and request.session.is_subscribed %}
+                                <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Create Event</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+           
+            <!-- Right-aligned login button -->
+            <div class="d-flex">
+                {% if request.session.is_logged_in %}
+                    <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
+                    <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <!-- Subscription Modal -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subscriptionModalLabel">Subscription Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">You need to subscribe to create events. Click the button below to subscribe.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="subscribeButton" href="{% url 'subscription' %}" class="btn btn-primary">Subscribe Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup" class="popup">
+    <span id="popup-message"></span>
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+</div>
+
+    <!-- Image Carousel -->
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZXZlbnR8ZW58MHx8MHx8fDA%3D" class="d-block w-100 carousel-image" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://cdn.prod.website-files.com/5726ee0d78d342c0529ee26c/57901dea34f0e4a2603810d6_photographer-1209069_1920.jpg" class="d-block w-100 carousel-image" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXmVV-zpJ_dXEg0JOc7fr55zI1GW9wdVqsBQM7i_qa1dD9IdCYLtZFMCUR6EfQgb2TW6E&usqp=CAU" class="d-block w-100 carousel-image" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+<!-- Subscription Modal -->
+
+    <!-- Events Section -->
+    <div class="container mt-4">
+        <h2 class="text-center fw-bold my-5">OUR EVENTS</h2>
+        
+        <div class="row event-card align-items-center">
+            <div class="col-md-8">
+                <h6>Exciting Events</h6>
+                <h4>Join the Buzz: Lyft Launches Innovative Cross-Platform Service This Week!</h4>
+                <p>Get ready for a groundbreaking event! Lyft is set to launch a cross-platform service this week, 
+                revolutionizing the way we experience transportation. Don't miss out on being part of this momentous 
+                occasion that promises to redefine the future of travel.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsl6jz8XPgh4jAi5AxoW090Xvq803C2xwKanaoB_4eaUqouDUSfRs1_MQd3V3PeRpYeXo&usqp=CAU" 
+                        class="img-fluid" alt="Event Image">
+                    <a href="#" class="btn btn-danger position-absolute btn-explore">Explore More</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-center fw-bold my-5">UPCOMING EVENTS</h2>
+        <div class="row event-card">
+            <div class="col-md-4">
+                <div class="position-relative">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsl6jz8XPgh4jAi5AxoW090Xvq803C2xwKanaoB_4eaUqouDUSfRs1_MQd3V3PeRpYeXo&usqp=CAU" 
+                         class="img-fluid" alt="Event Image">
+                    <a href="#" class="btn btn-danger position-absolute start-50 translate-middle-x" 
+                       style="bottom: 10px; left: 50%; transform: translateX(-50%);">Explore More</a>
+                </div>
+            </div>            
+            <div class="col-md-8">
+                <h6 class="text-pink-500">Upcoming Events</h6>
+                <h4>Don't Miss Out! Lyft's Unveiling the Future with a Cross-Platform Service</h4>
+                <p>Brace yourself for an extraordinary event! Lyft is gearing up to launch an innovative cross-platform service this week. Join us as we unveil a new era in transportation that goes beyond the ordinary. Experience the future firsthand and be part of the journey!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-4 mt-4">
+        <p>&copy; 2023 Haven. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const subscribeButton = document.getElementById('subscribeButton');
+            const modalMessage = document.getElementById('modalMessage');
+        
+            // Check if the user is logged in
+            const isLoggedIn = {% if request.session.is_logged_in %}true{% else %}false{% endif %};
+        
+            if (!isLoggedIn) {
+                // If the user is not logged in, update the modal message and button behavior
+                modalMessage.textContent = 'Please log in to subscribe and create events.';
+                subscribeButton.textContent = 'Log In';
+                subscribeButton.href = "{% url 'login' %}";
+            } else {
+                // If the user is logged in, proceed to the subscription page
+                subscribeButton.textContent = 'Subscribe Now';
+                subscribeButton.href = "{% url 'subscription' %}";
+            }
+        });
+        </script>
+        <script>
+            // Function to show the popup
+            function showPopup(message, type) {
+                const popup = document.getElementById('popup');
+                const popupMessage = document.getElementById('popup-message');
+    
+                // Set the message and style based on type
+                popupMessage.textContent = message;
+                popup.className = `popup ${type}`; // Add type class (e.g., success, error)
+                popup.style.display = 'block';
+    
+                // Automatically close the popup after 5 seconds
+                setTimeout(() => {
+                    closePopup();
+                }, 5000);
+            }
+    
+            // Function to close the popup
+            function closePopup() {
+                const popup = document.getElementById('popup');
+                popup.style.display = 'none';
+            }
+    
+            // Check for Django messages and display them
+            {% if messages %}
+                {% for message in messages %}
+                    showPopup("{{ message }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+    
+</body>
+</html>
