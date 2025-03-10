@@ -118,7 +118,7 @@
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   
       // Simulate API request for registration
-      fetch('http://127.0.0.1:8000/register/', {
+      fetch("{% url 'register' %}", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
