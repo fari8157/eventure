@@ -133,6 +133,7 @@
           }),
       })
       .then(response => response.json())
+      console.log(response)
       .then(data => {
           if (data.success) {
               alert('We have sent an OTP to the entered email. Please check your inbox.');
@@ -143,6 +144,7 @@
       })
       .catch(error => {
           console.error('Error:', error);
+
           alert('Something went wrong. Please try again later.');
       });
   });
