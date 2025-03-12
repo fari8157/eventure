@@ -1,6 +1,6 @@
 
 env/
-/eventure/settings.py
+eventure/settings.py
 db.sqlite3
 media/
 staticfiles/
