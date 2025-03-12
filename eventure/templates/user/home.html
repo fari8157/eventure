@@ -179,10 +179,10 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
             <!-- Logo -->
-            <a href="{% url 'home' %}" class="text-2xl font-bold text-pink-600 ">Eventure</a>
+            <a href="{% url 'home' %}" class="navbar-brand">Eventure</a>
     
             <!-- Navbar Toggler for Mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
@@ -194,21 +194,21 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link " href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about_page' %}">About us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_profile' %}">profile</a>
+                        <a class="nav-link" href="{% url 'user_profile' %}">Profile</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
                             Events
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'event_list' %}">Active Events</a></li>
+                            <li><a class="dropdown-item " href="{% url 'event_list' %}">Active Events</a></li>
                             {% if request.session.is_logged_in and request.session.is_subscribed %}
                                 <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
                             {% else %}
@@ -223,9 +223,9 @@
             <div class="d-flex">
                 {% if request.session.is_logged_in %}
                     <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
-                    <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+                    <a href="{% url 'logout' %}" class="login-btn">Logout</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+                    <a href="{% url 'login' %}" class="login-btn">Log in</a>
                 {% endif %}
             </div>
         </div>

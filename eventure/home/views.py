@@ -374,7 +374,7 @@ def send_subscription_confirmation_email(user, subscription_plan, subscription_a
         'expiry_date': expiry_date,
         'login_url': login_url,
     })
-    plain_message = strip_tags(html_message)  # Fallback for plain text
+    plain_message = strip_tags(html_message)  
     from_email = 'support@haven.com'
     to_email = user.email
 
@@ -471,16 +471,16 @@ def ticket_create_razorpay_order(request):
         return JsonResponse({'error': 'User not logged in'}, status=403)
     if request.method == 'POST':
         try:
-            # Parse JSON data from the request body
+           
             data = json.loads(request.body)
             event_id = data.get('event_id')
-            ticket_count = int(data.get('ticket_count', 0))  # Default to 0 if missing
+            ticket_count = int(data.get('ticket_count', 0))  
 
-            # Validate input data
+            
             if not event_id or ticket_count <= 0:
                 return JsonResponse({'error': 'Invalid data provided'}, status=400)
 
-            # Fetch the event from the database
+           
             try:
                 event = Event.objects.get(id=event_id)
                 if event.date < timezone.now():
@@ -490,12 +490,12 @@ def ticket_create_razorpay_order(request):
             except Event.DoesNotExist:
                 return JsonResponse({'error': 'Event not found'}, status=404)
 
-            # Calculate the total amount
-            amount = event.price * ticket_count  # Assuming event.price is in INR
+          
+            amount = event.price * ticket_count  
 
             # Create Razorpay Order
             order = razorpay_client.order.create({
-                'amount': int(amount * 100),  # Convert to paise (Razorpay expects amount in paise)
+                'amount': int(amount * 100), 
                 'currency': 'INR',
                 'payment_capture': '1',
             })
@@ -514,7 +514,7 @@ def ticket_create_razorpay_order(request):
 
 
 
-# Initialize Razorpay client
+
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
 
 @csrf_exempt
@@ -523,7 +523,7 @@ def ticket_payment_success(request):
         return JsonResponse({'error': 'User not logged in'}, status=403)
     if request.method == 'POST':
         try:
-            # Parse JSON data from the request body
+          
             data = json.loads(request.body)
             razorpay_payment_id = data['razorpay_payment_id']
             razorpay_order_id = data['razorpay_order_id']
@@ -539,7 +539,7 @@ def ticket_payment_success(request):
                 'ticket_count': ticket_count,
             })
 
-            # Verify Payment Signature
+           
             params_dict = {
                 'razorpay_order_id': razorpay_order_id,
                 'razorpay_payment_id': razorpay_payment_id,
@@ -557,21 +557,21 @@ def ticket_payment_success(request):
                 print("Unexpected error during verification:", str(e))
                 return JsonResponse({'status': 'error', 'message': 'Payment verification failed'}, status=400)
 
-            # Fetch UserProfile from session username
+            
             username = request.session.get('username')
             print("user",username)
             if not username:
                 return JsonResponse({'status': 'error', 'message': 'User not logged in'}, status=400)
 
             try:
-                # Fetch UserProfile directly using the username
+               
                 user_profile = UserProfile.objects.get(username=username)
                 print("UserProfile fetched successfully:", user_profile.username)
             except UserProfile.DoesNotExist as e:
                 print("Error fetching UserProfile:", str(e))
                 return JsonResponse({'status': 'error', 'message': 'User profile not found'}, status=400)
 
-            # Save Ticket
+           
             event = Event.objects.get(id=event_id)
             ticket = EventTicket(
                 user_profile=user_profile,
@@ -603,25 +603,22 @@ def booking_success(request):
 
 
 def profile(request):
-    # Check if the user is logged in
+   
     if not request.session.get('is_logged_in'):
         messages.error(request, 'User not logged in')
         return redirect('home')
 
-    # Get the logged-in user's profile
+   
     username = request.session.get('username')
     user_profile = get_object_or_404(UserProfile, username=username)
 
-    # Get all events organized by the user
+   
     organized_events = user_profile.organized_events.annotate(
-        total_tickets_sold=Sum(F('tickets__ticket_count'), default=Value(0)),  # ✅ Corrected reference
-        total_revenue=Sum(F('tickets__amount'), default=Value(0))  # ✅ Corrected reference
+        total_tickets_sold=Sum(F('tickets__ticket_count'), default=Value(0)),  
+        total_revenue=Sum(F('tickets__amount'), default=Value(0))  
     )
 
-    # Debugging: Print query results
-    print(organized_events.values('title', 'total_tickets_sold', 'total_revenue'))  
-
-    # Render the profile page with the user's profile and event stats
+   
     return render(request, 'user/profile.html', {
         'user_profile': user_profile,
         'organized_events': organized_events, 
@@ -634,48 +631,44 @@ def profile(request):
 
 def update_profile_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
-        # First, check if the username exists in the session
         if 'username' in request.session:
             username = request.session['username']
         else:
             return JsonResponse({'success': False, 'message': 'User not logged in'})
 
-        # Try to find the UserProfile based on the username in the session
         try:
             user_profile = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'User profile not found'})
 
-        # Get the image from the request
         image = request.FILES['image']
-        
-        # Save the new image to the user's profile
         user_profile.image = image
         user_profile.save()
 
-        # Return JSON response with the updated image URL
+        # Log the image URL for debugging
+        print("Updated Image URL:", user_profile.image.url)
+
         return JsonResponse({
             'success': True,
-            'image_url': user_profile.image.url  # The URL will point to the media directory
+            'image_url': user_profile.image.url  # Ensure this URL is correct
         })
-    
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
 
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
 
 
 def update_profile_details(request):
     if request.method == 'POST':
-        # Ensure the username exists in the session
+       
         if 'username' not in request.session:
             return JsonResponse({'success': False, 'message': 'User not found '})
 
         username = request.session['username']
 
         try:
-            # Get the user profile based on the username from session
+          
             user_profile = UserProfile.objects.get(username=username)
 
-            # Get the updated data from the request body
+          
             data = json.loads(request.body)
             fullname = data.get('fullname')
             phone_number = data.get('phone_number')
@@ -683,7 +676,7 @@ def update_profile_details(request):
             if not fullname or not phone_number:
                 return JsonResponse({'success': False, 'message': 'Both fields are required'})
 
-            # Update the user profile
+          
             user_profile.full_name = fullname
             user_profile.phone_number = phone_number
             user_profile.save()
@@ -704,24 +697,24 @@ def update_profile_details(request):
 
 
 def edit_event(request, event_id):
-    # Fetch the event based on event_id
+   
     event = get_object_or_404(Event, id=event_id)
 
-    # Check if user is logged in by checking the session
+   
     if 'username' not in request.session:
         return JsonResponse({'success': False, 'message': 'User not logged in'})
 
-    # Check if the event has already passed
+   
     if event.date < timezone.now():
         return JsonResponse({'success': False, 'message': 'Event has already passed and cannot be edited'})
 
-    # Check if the event tickets have been sold out
+   
     total_sold_tickets = EventTicket.objects.filter(event=event).aggregate(total_sold=Sum('ticket_count'))['total_sold'] or 0
     if total_sold_tickets > 0:
         return JsonResponse({'success': False, 'message': 'Event tickets have already been sold, cannot edit'})
 
     if request.method == 'POST':
-        # Only update fields that have changed
+      
         event.title = request.POST.get('title', event.title)
         event.description = request.POST.get('description', event.description)
         event.date = request.POST.get('date', event.date)
@@ -730,21 +723,21 @@ def edit_event(request, event_id):
         event.category = request.POST.get('category', event.category)
         event.ticket_count = request.POST.get('ticket_count', event.ticket_count)
         
-        # Handle image upload
+      
         if 'image' in request.FILES:
             event.image = request.FILES['image']
 
         event.save()
 
-        # Return a success message and redirect
+      
         return JsonResponse({'success': True, 'message': 'Event updated successfully'})
 
     return render(request, 'user/edit_event.html', {'event': event})
 
 def static_page(request):
-    # Render the static page
+   
     return render(request, 'user/about.html')
 
 def logout_view(request):
-    request.session.flush()  # Clears all session data
+    request.session.flush()  
     return redirect('home')

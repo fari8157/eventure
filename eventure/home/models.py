@@ -24,6 +24,8 @@ class UserProfile(models.Model):
     is_subscribed = models.BooleanField(default=False) 
     subscribed_date = models.DateTimeField(null=True, blank=True)
     image = models.ImageField(upload_to='static/media/profile_images/', blank=True, null=True)
+    is_admin = models.BooleanField(default=False)
+
 
 
     def __str__(self):

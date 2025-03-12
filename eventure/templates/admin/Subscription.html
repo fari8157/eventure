@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #81C784;
+            --light-green: #E8F5E9;
+            --dark-green: #2E7D32;
+            --light-bg: #ffffff;
+            --dark-bg: #f5f5f5;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar {
+            height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: white;
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid #f0f0f0;
+        }
+        
+        .sidebar.minimized {
+            width: 80px;
+        }
+        
+        .sidebar .brand {
+            padding: 0 24px 24px;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar.minimized .brand span {
+            display: none;
+        }
+        
+        .sidebar.minimized .brand {
+            justify-content: center;
+        }
+        
+        .sidebar .brand i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .sidebar.minimized .brand i {
+            margin-right: 0;
+        }
+        
+        .sidebar a {
+            padding: 14px 24px;
+            text-decoration: none;
+            font-size: 16px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            margin: 4px 0;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar .icon {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .sidebar.minimized .icon {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+        
+        .sidebar.minimized a {
+            padding: 14px;
+            justify-content: center;
+        }
+        
+        .sidebar.minimized a span {
+            display: none;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: margin-left 0.3s ease;
+            background-color: #FAFAFA;
+            min-height: 100vh;
+        }
+        
+        .main-content.minimized {
+            margin-left: 80px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        
+        .card-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .stats-card .icon-bg {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 100px;
+            opacity: 0.05;
+            color: var(--primary-color);
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            right: -15px;
+            top: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        
+        .toggle-btn:hover {
+            background-color: var(--dark-green);
+        }
+        
+        /* Table Styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        
+        .table thead th {
+            border-bottom: none;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 12px 15px;
+        }
+        
+        .table tbody tr {
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-top: none;
+        }
+        
+        .table tbody tr td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .table tbody tr td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .dashboard-header p {
+            color: #6c757d;
+        }
+        
+        /* Status badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        /* Table Styling - White & Green Theme */
+.table {
+    background-color: white;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Table Header */
+.table thead th {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 12px 15px;
+    border: none;
+}
+
+/* Table Body */
+.table tbody tr {
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-green);
+}
+
+/* Table Cells */
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: none;
+}
+
+/* First & Last Column Rounded Borders */
+.table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Status Badges */
+.badge-success {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+.badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-chart-line"></i>
+            <span>AdminPro</span>
+        </div>
+        
+        <!-- Toggle Button -->
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+        </button>
+        
+        <a href="{% url 'admin_dashboard' %}">
+            <i class="fas fa-tachometer-alt icon"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'user_management' %}">
+            <i class="fas fa-users icon"></i>
+            <span>Users</span>
+        </a>
+        <a href="{% url 'admin_event_list' %}">
+            <i class="fas fa-calendar-alt icon"></i>
+            <span>Events</span>
+        </a>
+        <a href="{% url 'subscription_list' %}"  class="active">
+            <i class="fas fa-money-check-alt icon"></i>
+            <span>Subscription</span>
+        </a>
+        <a href="{% url 'ticket_list' %}">
+            <i class="fas fa-ticket-alt icon"></i>
+            <span>Ticket Info</span>
+        </a>
+        <a href="{% url 'admin_logout' %}" class="mt-4">
+            <i class="fas fa-sign-out-alt icon"></i>
+            <span>Logout</span>
+        </a>
+        
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="dashboard-header">
+            <h1>Subscription Management</h1>
+            <p>Manage all subscriptions from this panel.</p>
+        </div>
+
+        <!-- Subscription Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Subscription List</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Subscription ID</th>
+                                        <th>User Name</th>
+                                        <th>Plan</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subscription in subscriptions %}
+                                    <tr>
+                                        <td>{{ subscription.id }}</td>
+                                        <td>{{ subscription.user_profile.username }}</td>
+                                        <td>Premium</td>
+                                        <td>{{ subscription.date|date:"Y-m-d" }}</td>
+                                        <td>{{ subscription.end_date|date:"Y-m-d" }}</td>
+                                        <td>
+                                            {% if subscription.end_date > now %}
+                                                <span class="badge badge-success">Active</span>
+                                            {% elif subscription.end_date > now|date:"Y-m-d" and subscription.end_date <= now|date:"Y-m-d"|add:"7" %}
+                                                <span class="badge badge-warning">Expiring Soon</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Expired</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>100</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">No subscriptions found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            sidebar.classList.toggle('minimized');
+            mainContent.classList.toggle('minimized');
+            
+            // Change icon based on sidebar state
+            if(sidebar.classList.contains('minimized')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        }
+    </script>
+</body>
+</html>

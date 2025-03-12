@@ -336,6 +336,7 @@
                         <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Per Ticket Cost</th>
                         <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Total Revenue</th>
                         <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Action</th>
+                        <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -388,6 +389,7 @@
                                 <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Booking Time</th>
                                 <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Ticket Count</th>
                                 <th class="px-4 py-2 text-left text-sm font-bold text-pink-800">Amount</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -455,28 +457,27 @@
                 const formData = new FormData();
                 formData.append("image", file);
         
-                // Use AJAX to send the image to the backend
                 fetch("{% url 'update_profile_image' %}", {
                     method: 'POST',
                     headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',  // CSRF Token
+                        'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is included
                     },
                     body: formData,
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Backend Response:", data);  // Log the response
                     if (data.success) {
-                        // Update profile image preview
-                        document.getElementById('profileImage').src = data.image_url;
-                        
-                        // Show SweetAlert success message
+                        // Update the image source
+                        const profileImage = document.getElementById('profileImage');
+                        profileImage.src = data.image_url + "?t=" + new Date().getTime();  // Force reload
+        
                         Swal.fire({
                             icon: 'success',
                             title: 'Profile Picture Updated!',
                             text: 'Your profile picture has been updated successfully.',
                         });
                     } else {
-                        // Show SweetAlert error message
                         Swal.fire({
                             icon: 'error',
                             title: 'Update Failed',
@@ -494,7 +495,6 @@
                 });
             }
         }
-        
 
         // Function to edit phone number
         function editUserDetails() {

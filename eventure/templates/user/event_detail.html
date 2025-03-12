@@ -3,79 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Details - Haven</title>
+    <title>Event Details - Eventure</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
     <style>
+        :root {
+            --primary: #ff4e9a;
+            --secondary: #ff2d8a;
+            --accent: #ff8fb8;
+            --text: #333333;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
         body {
-            background-color: #f4f4f4;
-        }
-        .event-details {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 1s ease-in-out;
-        }
-        .event-details h2 {
-            color: #d63384;
-            margin-bottom: 20px;
-            animation: slideInDown 1s ease-in-out;
-        }
-        .event-details img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            animation: zoomIn 1s ease-in-out;
-        }
-        .event-details p {
-            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text);
             line-height: 1.6;
-            color: #333;
         }
-        .event-details .btn-primary {
-            background-color: #d63384;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background 0.3s ease-in-out;
-        }
-        .event-details .btn-primary:hover {
-            background-color: #b82a6d;
-        }
+
+        /* Navbar Styling */
         .navbar {
-            background-color: #fff;
+            background-color: #fff; /* Clean white background */
             padding: 10px 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+    
         .navbar-brand img {
             width: 50px;
             height: 50px;
         }
+    
         .navbar-nav .nav-item {
             font-weight: 500;
             font-size: 16px;
         }
+    
         .navbar-nav .nav-link {
             color: #333;
             transition: color 0.3s ease-in-out;
         }
+    
         .navbar-nav .nav-link:hover {
-            color: #d63384;
+            color: #d63384; /* Accent color on hover */
         }
+    
         .navbar-nav .nav-item:not(:last-child) {
-            margin-right: 15px;
+            margin-right: 15px; /* Spacing between nav items */
         }
+    
         .navbar-toggler {
             border: none;
             outline: none;
         }
+    
         .navbar-toggler:focus {
             box-shadow: none;
         }
+    
         .login-btn {
             font-weight: bold;
             color: #fff;
@@ -84,17 +73,302 @@
             border-radius: 8px;
             transition: background 0.3s ease-in-out;
         }
+    
         .login-btn:hover {
             background-color: #b82a6d;
+        }
+
+        /* Event Details Section */
+        .event-container {
+            padding: 50px 0;
+        }
+
+        .event-card {
+            background-color: var(--bg-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .event-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            padding: 20px 30px;
+            color: white;
+            position: relative;
+        }
+
+        .event-title {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .event-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin-right: 10px;
+        }
+
+        .event-body {
+            padding: 30px;
+        }
+
+        .event-info {
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 78, 154, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .info-text h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .info-text p {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .event-description {
+            background-color: rgba(255, 78, 154, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .book-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            width: 100%;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 78, 154, 0.2);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            background: white;
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 20px 30px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-footer {
+            border: none;
+            padding: 20px 30px;
+        }
+
+        .btn-close {
+            color: white;
+            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .animate-slideUp {
+            animation: slideUp 1s ease forwards;
+        }
+
+        /* Ticket Counter */
+        .ticket-counter {
+            background-color: rgba(255, 78, 154, 0.05);
+            padding: 10px 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .ticket-counter span {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Additional pink elements */
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: rgba(255, 78, 154, 0.1);
+            color: var(--primary);
+        }
+
+        .form-control:focus, .input-group-text {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.25rem rgba(255, 78, 154, 0.25);
+        }
+
+        .input-group-text {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .text-muted {
+            color: var(--text) !important;
+        }
+
+        .toast-header {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .toast-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+        
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 6px solid rgba(255, 78, 154, 0.1);
+            border-top-color: var(--primary);
+            animation: spin 1s infinite linear;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Button loading state */
+        .book-btn.loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        
+        .book-btn.loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: calc(50% - 10px);
+            left: calc(50% - 10px);
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            animation: spin 1s infinite linear;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text">Processing your request...</p>
+    </div>
+
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
             <!-- Logo -->
-            <a href="{% url 'home' %}" class="text-2xl font-bold text-pink-600 ">Eventure</a>
+            <a href="{% url 'home' %}" class="navbar-brand">Eventure</a>
     
             <!-- Navbar Toggler for Mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
@@ -106,21 +380,21 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link " href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about_page' %}">About us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_profile' %}">profile</a>
+                        <a class="nav-link" href="{% url 'user_profile' %}">Profile</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
                             Events
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'event_list' %}">Active Events</a></li>
+                            <li><a class="dropdown-item " href="{% url 'event_list' %}">Active Events</a></li>
                             {% if request.session.is_logged_in and request.session.is_subscribed %}
                                 <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
                             {% else %}
@@ -135,171 +409,341 @@
             <div class="d-flex">
                 {% if request.session.is_logged_in %}
                     <span class="navbar-text me-3">Welcome, {{ request.session.username }}</span>
-                    <a href="{% url 'logout' %}" class="login-btn text-decoration-none">Logout</a>
+                    <a href="{% url 'logout' %}" class="login-btn">Logout</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="login-btn text-decoration-none">Log in</a>
+                    <a href="{% url 'login' %}" class="login-btn">Log in</a>
                 {% endif %}
             </div>
         </div>
     </nav>
+
     <!-- Subscription Modal -->
-<div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="subscriptionModalLabel">Subscription Required</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="modalMessage">You need to subscribe to create events. Click the button below to subscribe.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="subscribeButton" href="{% url 'subscription' %}" class="btn btn-primary">Subscribe Now</a>
+    <div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subscriptionModalLabel">Subscription Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">You need to subscribe to create events. Click the button below to subscribe.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a id="subscribeButton" href="{% url 'subscription' %}" class="book-btn">Subscribe Now</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- Event Details Section -->
-    <div class="event-details">
-        <h2 class="animate__animated animate__slideInDown font-bold text-3xl">{{ event.title }}</h2>
-
-
-        {% if event.image %}
-            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="animate__animated animate__zoomIn">
-        {% endif %}
-        <p><strong>Description:</strong> {{ event.description }}</p>
-        <p><strong>Organizer:</strong> {{ event.organizer.username }}</p>
-        <p><strong>Date:</strong> {{ event.date }}</p>
-        <p><strong>Location:</strong> {{ event.location }}</p>
-        <p><strong>Category:</strong> {{ event.get_category_display }}</p>
-        <p><strong>Ticket Count:</strong> {{ event.ticket_count }}</p>
-        <p><strong>Price:</strong> ₹{{ event.price }}</p>
-        <button id="bookNowBtn" class="btn btn-primary animate__animated animate__fadeInUp" data-bs-toggle="modal" data-bs-target="#bookingModal">Book Now</button>
-    </div>
-        <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="bookingModalLabel">Book Tickets for {{ event.title }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="bookingForm">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="ticket_count" class="form-label">Number of Tickets:</label>
-                                <input type="number" id="ticket_count" name="ticket_count" class="form-control" min="1"  required>
+    <section class="event-container animate-fadeIn">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="event-card animate-slideUp">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-image">
+                        {% else %}
+                            <div class="placeholder-image d-flex align-items-center justify-content-center" style="height: 300px; background-color: #e9ecef;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
-                        </form>
+                        {% endif %}
+                        
+                        <div class="event-header">
+                            <h1 class="event-title">{{ event.title }}</h1>
+                            <div>
+                                <span class="event-tag"><i class="fas fa-tag me-2"></i>{{ event.get_category_display }}</span>
+                                <span class="event-tag"><i class="fas fa-user me-2"></i>By {{ event.organizer.username }}</span>
+                            </div>
+                            <div class="price-tag">₹{{ event.price }}</div>
+                        </div>
+                        
+                        <div class="event-body">
+                            <div class="ticket-counter">
+                                <i class="fas fa-ticket-alt me-2"></i> <span>{{ event.ticket_count }}</span> tickets available
+                            </div>
+                            
+                            <div class="event-info">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="info-text">
+                                                <h5>Date & Time</h5>
+                                                <p>{{ event.date }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="info-text">
+                                                <h5>Location</h5>
+                                                <p>{{ event.location }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="event-description">
+                                <h4><i class="fas fa-info-circle me-2"></i>About This Event</h4>
+                                <p>{{ event.description }}</p>
+                            </div>
+                            
+                            <button id="bookNowBtn" class="book-btn" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                <i class="fas fa-ticket-alt me-2"></i> Book Now
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Book Tickets for {{ event.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="ticket_count" class="form-label fw-bold">Number of Tickets:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-ticket-alt"></i></span>
+                                <input type="number" id="ticket_count" name="ticket_count" class="form-control" min="1" required>
+                            </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            <p class="text-muted">Total Amount: <span id="totalAmount">₹0</span></p>
+                        </div>
+                        <button type="submit" id="proceedToPayment" class="book-btn">
+                            <i class="fas fa-credit-card me-2"></i> Proceed to Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Notification -->
+    <div id="popup" class="position-fixed top-0 end-0 p-3" style="z-index: 1100; display: none;">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" onclick="closePopup()"></button>
+            </div>
+            <div class="toast-body" id="popup-message"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-        <!-- Razorpay Payment Script -->
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            // Handle Form Submission
-            document.getElementById('bookingForm').addEventListener('submit', function (e) {
-                e.preventDefault();
+    <script>
+        // Loading functionality
+        const loadingOverlay = document.getElementById('loadingOverlay');
         
-                const ticketCount = document.getElementById('ticket_count').value;
-                const eventId = "{{ event.id }}";
-                const price = "{{ event.price }}";
-                const amount = ticketCount * price * 100; // Amount in paise
+        // Function to show loading overlay
+        function showLoading(message = 'Processing your request...') {
+            document.querySelector('.loading-text').textContent = message;
+            loadingOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling while loading
+        }
         
-                // Create Razorpay Order
-                fetch("{% url 'ticket_create_razorpay_order' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({
-                        event_id: eventId,
-                        ticket_count: ticketCount,
-                        amount: amount,
-                    }),
-                })
-                .then(response => {
-                    if (response.status === 403) {
-                        // User is not logged in, show SweetAlert
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Login Required',
-                            text: 'You need to be logged in to book tickets.',
-                            confirmButtonText: 'OK'
-                        });
-                        return Promise.reject('User not logged in');
-                    }
-                    if (!response.ok) {
-                        // Handle backend errors (e.g., event passed, tickets sold out)
-                        return response.json().then(errorData => {
-                            return Promise.reject(errorData.error);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const options = {
-                        key: "{{ RAZORPAY_KEY_ID }}",
-                        amount: data.amount,
-                        currency: "INR",
-                        order_id: data.order_id,
-                        handler: function (response) {
-                            // Handle Payment Success
-                            fetch("{% url 'ticket_payment_success' %}", {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRFToken': '{{ csrf_token }}',
-                                },
-                                body: JSON.stringify({
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    razorpay_order_id: response.razorpay_order_id,
-                                    razorpay_signature: response.razorpay_signature,
-                                    event_id: eventId,
-                                    ticket_count: ticketCount,
-                                }),
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    window.location.href = "{% url 'booking_success' %}";
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Payment Failed',
-                                        text: 'Payment failed. Please try again.',
-                                        confirmButtonText: 'OK'
-                                    });
-                                }
-                            });
-                        },
-                    };
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-                })
-                .catch(error => {
-                    // Display backend error messages using SweetAlert
+        // Function to hide loading overlay
+        function hideLoading() {
+            loadingOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Function to show button loading state
+        function showButtonLoading(button) {
+            button.classList.add('loading');
+            const originalText = button.innerHTML;
+            button.setAttribute('data-original-text', originalText);
+        }
+        
+        // Function to hide button loading state
+        function hideButtonLoading(button) {
+            button.classList.remove('loading');
+            const originalText = button.getAttribute('data-original-text');
+            if (originalText) {
+                button.innerHTML = originalText;
+            }
+        }
+
+        // Calculate total amount when ticket count changes
+        document.getElementById('ticket_count').addEventListener('input', function() {
+            const ticketCount = this.value;
+            const price = {{ event.price }};
+            const totalAmount = ticketCount * price;
+            document.getElementById('totalAmount').textContent = '₹' + totalAmount;
+        });
+
+        // Handle Form Submission
+        document.getElementById('bookingForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // Show loading in button
+            const submitButton = document.getElementById('proceedToPayment');
+            showButtonLoading(submitButton);
+    
+            const ticketCount = document.getElementById('ticket_count').value;
+            const eventId = "{{ event.id }}";
+            const price = "{{ event.price }}";
+            const amount = ticketCount * price * 100; // Amount in paise
+    
+            // Create Razorpay Order
+            fetch("{% url 'ticket_create_razorpay_order' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    event_id: eventId,
+                    ticket_count: ticketCount,
+                    amount: amount,
+                }),
+            })
+            .then(response => {
+                hideButtonLoading(submitButton);
+                
+                if (response.status === 403) {
+                    // User is not logged in, show SweetAlert
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: error || 'An error occurred. Please try again.',
-                        confirmButtonText: 'OK'
+                        title: 'Login Required',
+                        text: 'You need to be logged in to book tickets.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ff4e9a'
                     });
-                    console.error('Error:', error);
+                    return Promise.reject('User not logged in');
+                }
+                if (!response.ok) {
+                    // Handle backend errors (e.g., event passed, tickets sold out)
+                    return response.json().then(errorData => {
+                        return Promise.reject(errorData.error);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Show main loading overlay before opening Razorpay
+                showLoading('Preparing payment gateway...');
+                
+                const options = {
+                    key: "{{ RAZORPAY_KEY_ID }}",
+                    amount: data.amount,
+                    currency: "INR",
+                    order_id: data.order_id,
+                    name: "Eventure",
+                    description: "Ticket Purchase for {{ event.title }}",
+                    image: "https://your-logo-url.png", // Add your logo URL here
+                    theme: {
+                        color: "#ff4e9a"
+                    },
+                    handler: function (response) {
+                        // Show loading during payment processing
+                        showLoading('Processing payment...');
+                        
+                        // Handle Payment Success
+                        fetch("{% url 'ticket_payment_success' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}',
+                            },
+                            body: JSON.stringify({
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                                event_id: eventId,
+                                ticket_count: ticketCount,
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            hideLoading();
+                            if (data.status === 'success') {
+                                showLoading('Redirecting to confirmation page...');
+                                window.location.href = "{% url 'booking_success' %}";
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Failed',
+                                    text: 'Payment failed. Please try again.',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#ff4e9a'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            hideLoading();
+                            console.error('Error processing payment:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred while processing your payment. Please try again.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ff4e9a'
+                            });
+                        });
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            // Hide loading if payment modal is dismissed
+                            hideLoading();
+                        }
+                    }
+                };
+                
+                // Hide loading before opening Razorpay (it will be shown again after payment)
+                hideLoading();
+                const rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => {
+                // Hide loading states
+                hideLoading();
+                hideButtonLoading(submitButton);
+                
+                // Display backend error messages using SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error || 'An error occurred. Please try again.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ff4e9a'
                 });
+                console.error('Error:', error);
             });
-        </script>
-    
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        });
+
+        // Page load event
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate page loading
+            showLoading('Loading event details...');
+            
+            // Hide loading after content is loaded
+            setTimeout(function() {
+                hideLoading();
+            }, 500);
+            
+            // Rest of your initialization code...
             const subscribeButton = document.getElementById('subscribeButton');
             const modalMessage = document.getElementById('modalMessage');
         
@@ -317,36 +761,65 @@
                 subscribeButton.href = "{% url 'subscription' %}";
             }
         });
-        </script>
-        <script>
-            // Function to show the popup
-            function showPopup(message, type) {
-                const popup = document.getElementById('popup');
-                const popupMessage = document.getElementById('popup-message');
-    
-                // Set the message and style based on type
-                popupMessage.textContent = message;
-                popup.className = `popup ${type}`; // Add type class (e.g., success, error)
-                popup.style.display = 'block';
-    
-                // Automatically close the popup after 5 seconds
-                setTimeout(() => {
-                    closePopup();
-                }, 5000);
+
+        // Add loading indicator for navigation links
+        document.querySelectorAll('a:not([data-bs-toggle])').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't show loading for external links or links with special behavior
+                if (this.target === '_blank' || 
+                    this.href.startsWith('mailto:') || 
+                    this.href.startsWith('tel:') ||
+                    this.href.includes('#')) {
+                    return;
+                }
+                
+                // Show loading
+                showLoading('Navigating to new page...');
+            });
+        });
+
+        // Function to show the popup
+        function showPopup(message, type) {
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popup-message');
+            const toast = popup.querySelector('.toast');
+
+            // Set the message
+            popupMessage.textContent = message;
+            
+            // Set class based on type
+            toast.className = 'toast show';
+            if (type === 'success') {
+                toast.classList.add('bg-success', 'text-white');
+            } else if (type === 'error') {
+                toast.classList.add('bg-danger', 'text-white');
+            } else if (type === 'warning') {
+                toast.classList.add('bg-warning');
+            } else {
+                toast.classList.add('bg-info', 'text-white');
             }
-    
-            // Function to close the popup
-            function closePopup() {
-                const popup = document.getElementById('popup');
-                popup.style.display = 'none';
-            }
-    
-            // Check for Django messages and display them
-            {% if messages %}
-                {% for message in messages %}
-                    showPopup("{{ message }}", "{{ message.tags }}");
-                {% endfor %}
-            {% endif %}
-        </script>
-    </body>
-    </html>
+            
+            // Show popup
+            popup.style.display = 'block';
+
+            // Automatically close after 5 seconds
+            setTimeout(() => {
+                closePopup();
+            }, 5000);
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
+        // Check for Django messages
+        {% if messages %}
+            {% for message in messages %}
+                showPopup("{{ message }}", "{{ message.tags }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>

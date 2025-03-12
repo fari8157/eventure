@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #81C784;
+            --light-green: #E8F5E9;
+            --dark-green: #2E7D32;
+            --light-bg: #ffffff;
+            --dark-bg: #f5f5f5;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar {
+            height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: white;
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid #f0f0f0;
+        }
+        
+        .sidebar.minimized {
+            width: 80px;
+        }
+        
+        .sidebar .brand {
+            padding: 0 24px 24px;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar.minimized .brand span {
+            display: none;
+        }
+        
+        .sidebar.minimized .brand {
+            justify-content: center;
+        }
+        
+        .sidebar .brand i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .sidebar.minimized .brand i {
+            margin-right: 0;
+        }
+        
+        .sidebar a {
+            padding: 14px 24px;
+            text-decoration: none;
+            font-size: 16px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            margin: 4px 0;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar .icon {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .sidebar.minimized .icon {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+        
+        .sidebar.minimized a {
+            padding: 14px;
+            justify-content: center;
+        }
+        
+        .sidebar.minimized a span {
+            display: none;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: margin-left 0.3s ease;
+            background-color: #FAFAFA;
+            min-height: 100vh;
+        }
+        
+        .main-content.minimized {
+            margin-left: 80px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        
+        .card-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .stats-card .icon-bg {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 100px;
+            opacity: 0.05;
+            color: var(--primary-color);
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            right: -15px;
+            top: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        
+        .toggle-btn:hover {
+            background-color: var(--dark-green);
+        }
+        
+        /* Table Styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        
+        .table thead th {
+            border-bottom: none;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 12px 15px;
+        }
+        
+        .table tbody tr {
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-top: none;
+        }
+        
+        .table tbody tr td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .table tbody tr td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .dashboard-header p {
+            color: #6c757d;
+        }
+        
+        /* Status badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        /* Adjust table cell font size */
+.table th, .table td {
+    font-size: 0.9rem; /* Smaller font size for table data */
+    padding: 10px 12px;
+}
+
+/* Optional: Adjust table heading font size */
+.table thead th {
+    font-size: 0.85rem;  /* Even smaller for table headers */
+}
+
+/* Optional: Adjust badge font size */
+.badge {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+}
+/* Table Styling */
+.table {
+    background-color: white;
+    border-collapse: collapse;
+}
+
+/* Header Styling */
+.table thead {
+    background-color: #28a745; /* Green */
+    color: white;
+    font-weight: bold;
+}
+
+/* Row Hover Effect */
+.table tbody tr:hover {
+    background-color: #eafaea; /* Light green */
+}
+
+/* Bordered Cells */
+.table td, .table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Badge Styling */
+.badge-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-success {
+    background-color: #28a745;
+}
+/* Table Styling */
+.table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    background-color: white; /* White background for the table */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background-color: var(--primary-color); /* Green background for headers */
+    color: var(--text-light); /* White text */
+    border-bottom: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 12px 15px;
+}
+
+.table tbody tr {
+    background-color: var(--light-bg); /* Light green background for rows */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: none;
+    font-size: 0.9rem;
+    color: var(--text-dark); /* Dark text */
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-green); /* Light green hover effect */
+}
+
+.table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Badge Styling */
+.badge-warning {
+    background-color: #f0ad4e; /* Yellow for "Upcoming" */
+    color: #fff;
+}
+
+.badge-danger {
+    background-color: #d9534f; /* Red for "Past" */
+    color: #fff;
+}
+
+.badge-success {
+    background-color: #5cb85c; /* Green for "Active" */
+    color: #fff;
+}
+
+/* Organizer Info Link */
+.organizer-link {
+    text-decoration: none;
+    color: var(--primary-color); /* Green color */
+    font-weight: 600;
+}
+
+.organizer-link:hover {
+    text-decoration: underline;
+}
+
+.organizer-link i {
+    font-size: 24px;
+    color: gray;
+}
+
+/* Image Styling for Organizer */
+.organizer-link img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-chart-line"></i>
+            <span>AdminPro</span>
+        </div>
+        
+        <!-- Toggle Button -->
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+        </button>
+        
+        <a href="{% url 'admin_dashboard' %}" >
+            <i class="fas fa-tachometer-alt icon"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'user_management' %}">
+            <i class="fas fa-users icon"></i>
+            <span>Users</span>
+        </a>
+        <a href="{% url 'admin_event_list' %}"  class="active">
+            <i class="fas fa-calendar-alt icon"></i>
+            <span>Events</span>
+        </a>
+        <a href="{% url 'subscription_list' %}">
+            <i class="fas fa-money-check-alt icon"></i>
+            <span>Subscription</span>
+        </a>
+        <a href="{% url 'ticket_list' %}">
+            <i class="fas fa-ticket-alt icon"></i>
+            <span>Ticket Info</span>
+        </a>
+        <a href="{% url 'admin_logout' %}" class="mt-4">
+            <i class="fas fa-sign-out-alt icon"></i>
+            <span>Logout</span>
+        </a>
+        
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="dashboard-header">
+            <h1>Event Management</h1>
+            <p>Manage all events from this panel.</p>
+        </div>
+
+        <!-- Event Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Event List</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-light">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Event ID</th>
+                                        <th>Event Name</th>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Organizer</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td>{{ event.id }}</td>
+                                        <td>{{ event.title }}</td>
+                                        <td>{{ event.date }}</td>
+                                        <td>{{ event.location }}</td>
+                                        <td>{{ event.get_category_display }}</td>
+                                        <td>${{ event.price }}</td>
+                                        <td>
+                                            <a href="javascript:void(0);" class="organizer-link d-flex align-items-center"
+                                               data-full-name="{{ event.organizer.full_name }}"
+                                               data-username="{{ event.organizer.username }}"
+                                               data-email="{{ event.organizer.email }}"
+                                               data-phone="{{ event.organizer.phone_number }}"
+                                               data-subscribed-date="{{ event.organizer.subscribed_date }}"
+                                               data-image="{% if event.organizer.image %}{{ event.organizer.image.url }}{% endif %}">
+                                            
+                                                {% if event.organizer.image %}
+                                                    <img src="{{ event.organizer.image.url }}" class="rounded-circle me-2" alt="Profile"
+                                                         style="width: 30px; height: 30px; object-fit: cover;">
+                                                {% else %}
+                                                    <i class="fas fa-user me-2" style="font-size: 24px; color: gray;"></i>
+                                                {% endif %}
+                                            
+                                                {{ event.organizer.full_name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {% if event.date > now %}
+                                            <span class="badge bg-warning text-dark">Upcoming</span>
+                                            {% elif event.date < now %}
+                                            <span class="badge bg-danger">Past</span>
+                                            {% else %}
+                                            <span class="badge bg-success">Active</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted">No events available.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="organizerModal" tabindex="-1" aria-labelledby="organizerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 12px;">
+                <div class="modal-header" style="background-color: var(--primary-color); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                    <h5 class="modal-title" id="organizerModalLabel">Organizer Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Profile Image or Default Icon -->
+                    <img id="modalProfileImage" src="" class="rounded-circle mb-3" alt="Profile Image" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid var(--primary-color); display: none;">
+                    <i id="defaultIcon" class="fas fa-user fa-5x mb-3" style="color: gray; display: none;"></i>
+    
+                    <h5 class="text-dark"><span id="modalFullName"></span></h5>
+                    <p class="text-muted">@<span id="modalUsername"></span></p>
+                    <hr>
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Phone Number:</strong> <span id="modalPhone"></span></p>
+                    <p><strong>Subscribed Date:</strong> <span id="modalSubscribedDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  
+  
+</div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.organizer-link').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    const fullName = this.getAttribute('data-full-name') || 'N/A';
+                    const username = this.getAttribute('data-username') || 'N/A';
+                    const email = this.getAttribute('data-email') || 'N/A';
+                    const phone = this.getAttribute('data-phone') || 'N/A';
+                    const subscribedDate = this.getAttribute('data-subscribed-date') || 'N/A';
+                    const profileImage = this.getAttribute('data-image');
+    
+                    // Set modal content
+                    document.getElementById('modalFullName').textContent = fullName;
+                    document.getElementById('modalUsername').textContent = username;
+                    document.getElementById('modalEmail').textContent = email;
+                    document.getElementById('modalPhone').textContent = phone;
+                    document.getElementById('modalSubscribedDate').textContent = subscribedDate;
+    
+                    // Handle profile image display
+                    const profileImageElement = document.getElementById('modalProfileImage');
+                    const defaultIconElement = document.getElementById('defaultIcon');
+    
+                    if (profileImage) {
+                        profileImageElement.src = profileImage;
+                        profileImageElement.style.display = 'block';
+                        defaultIconElement.style.display = 'none';
+                    } else {
+                        profileImageElement.style.display = 'none';
+                        defaultIconElement.style.display = 'block';
+                    }
+    
+                    // Show modal
+                    const organizerModal = new bootstrap.Modal(document.getElementById('organizerModal'));
+                    organizerModal.show();
+                });
+            });
+        });
+    </script>
+    
+    
+    
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            sidebar.classList.toggle('minimized');
+            mainContent.classList.toggle('minimized');
+            
+            // Change icon based on sidebar state
+            if(sidebar.classList.contains('minimized')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        }
+
+        // JavaScript to handle the click on the organizer's name and show the modal
+
+    </script>
+</body>
+</html>

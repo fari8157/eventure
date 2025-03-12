@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #81C784;
+            --light-green: #E8F5E9;
+            --dark-green: #2E7D32;
+            --light-bg: #ffffff;
+            --dark-bg: #f5f5f5;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+        }
+        
+        .sidebar {
+            height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: white;
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid #f0f0f0;
+        }
+        
+        .sidebar.minimized {
+            width: 80px;
+        }
+        
+        .sidebar .brand {
+            padding: 0 24px 24px;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar.minimized .brand span {
+            display: none;
+        }
+        
+        .sidebar.minimized .brand {
+            justify-content: center;
+        }
+        
+        .sidebar .brand i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .sidebar.minimized .brand i {
+            margin-right: 0;
+        }
+        
+        .sidebar a {
+            padding: 14px 24px;
+            text-decoration: none;
+            font-size: 16px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            margin: 4px 0;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .sidebar .icon {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .sidebar.minimized .icon {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+        
+        .sidebar.minimized a {
+            padding: 14px;
+            justify-content: center;
+        }
+        
+        .sidebar.minimized a span {
+            display: none;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: margin-left 0.3s ease;
+            background-color: #FAFAFA;
+            min-height: 100vh;
+        }
+        
+        .main-content.minimized {
+            margin-left: 80px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        
+        .card-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .stats-card .icon-bg {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 100px;
+            opacity: 0.05;
+            color: var(--primary-color);
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            right: -15px;
+            top: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        
+        .toggle-btn:hover {
+            background-color: var(--dark-green);
+        }
+        
+        /* Table Styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        
+        .table thead th {
+            border-bottom: none;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 12px 15px;
+        }
+        
+        .table tbody tr {
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-top: none;
+        }
+        
+        .table tbody tr td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .table tbody tr td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h1 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .dashboard-header p {
+            color: #6c757d;
+        }
+        
+        /* Status badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+        }
+        
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        #defaultIcon {
+            font-size: 40px;
+            color: #6c757d;
+        }
+        .user-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        #messageContainer {
+            position: relative;
+            padding-right: 35px; /* To make room for the close button */
+            opacity: 1;
+            transition: opacity 0.5s ease-out; /* Smooth fade-out effect */
+        }
+        
+        /* Class to hide the notification */
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        /* Optional: Styling for the close button */
+        #closeButton {
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        #closeButton:hover {
+            color: #dc3545;
+        }
+        /* Table Styling */
+.table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    background-color: var(--light-bg); /* Light background for the table */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background-color: var(--primary-color); /* Green background for headers */
+    color: var(--text-light); /* White text */
+    border-bottom: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 12px 15px;
+}
+
+.table tbody tr {
+    background-color: var(--light-bg); /* White background for rows */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: none;
+    font-size: 0.9rem;
+    color: var(--text-dark); /* Dark text */
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-green); /* Light green hover effect */
+}
+
+.table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* User Image Styling */
+.user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#defaultIcon {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+/* Badge Styling */
+.badge-success {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+        
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-chart-line"></i>
+            <span>AdminPro</span>
+        </div>
+        
+        <!-- Toggle Button -->
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+        </button>
+        
+        <a href="{% url 'admin_dashboard' %}" >
+            <i class="fas fa-tachometer-alt icon"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'user_management' %}"  class="active">
+            <i class="fas fa-users icon"></i>
+            <span>Users</span>
+        </a>
+        <a href="{% url 'admin_event_list' %}">
+            <i class="fas fa-calendar-alt icon"></i>
+            <span>Events</span>
+        </a>
+        <a href="{% url 'subscription_list' %}">
+            <i class="fas fa-money-check-alt icon"></i>
+            <span>Subscription</span>
+        </a>
+        <a href="{% url 'ticket_list' %}">
+            <i class="fas fa-ticket-alt icon"></i>
+            <span>Ticket Info</span>
+        </a>
+        <a href="{% url 'admin_logout' %}" class="mt-4">
+            <i class="fas fa-sign-out-alt icon"></i>
+            <span>Logout</span>
+        </a>
+        
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="dashboard-header">
+            <h1>User Management</h1>
+            <p>Manage all users from this panel.</p>
+            {% if messages %}
+            <div id="messageContainer" class="alert alert-info d-flex justify-content-between fade-show">
+                <div>
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+                <!-- Close button -->
+                <button id="closeButton" class="btn btn-sm btn-link text-dark">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        {% endif %}
+        
+       
+        
+        
+
+        <!-- User Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">User List</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>
+                                            {% if user.image %}
+                                                <img src="{{ user.image.url }}" alt="{{ user.full_name }}" class="user-image">
+                                            {% else %}
+                                                <i id="defaultIcon" class="fas fa-user"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.full_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{% if user.is_admin %}Admin{% else %}User{% endif %}</td>
+                                        <td>
+                                            {% if user.is_active %}
+                                                <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'toggle_block_user' user.id %}" class="btn btn-sm {% if user.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                                                {% if user.is_active %}Block{% else %}Unblock{% endif %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">No users found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeButton = document.getElementById('closeButton');
+            const messageContainer = document.getElementById('messageContainer');
+            
+            // Ensure both elements exist before adding event listener
+            if (closeButton && messageContainer) {
+                // Add event listener to the close button to hide the message
+                closeButton.addEventListener('click', function() {
+                    messageContainer.classList.add('fade-out');
+                });
+        
+                // Automatically hide the message after 5 seconds
+                setTimeout(function() {
+                    if (messageContainer) {
+                        messageContainer.classList.add('fade-out');
+                    }
+                }, 5000); // 5000ms = 5 seconds
+            }
+        });
+        
+    </script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            sidebar.classList.toggle('minimized');
+            mainContent.classList.toggle('minimized');
+            
+            // Change icon based on sidebar state
+            if(sidebar.classList.contains('minimized')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        }
+    </script>
+    
+</body>
+</html>
