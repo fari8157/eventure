@@ -45,7 +45,7 @@ def admin_login_view(request):
             return JsonResponse({"success": False, "error": "Invalid JSON data."}, status=400)
 
   
-    return render(request, "admin/login.html", {"csrf_token": get_token(request)})
+    return render(request, "admin_temp/login.html", {"csrf_token": get_token(request)})
 
 def admin_dashboard(request):
     if not request.session.get('is_admin', False):
@@ -86,14 +86,14 @@ def admin_dashboard(request):
         'recent_tickets': recent_tickets,
     }
 
-    return render(request, 'admin/dashboard.html', context)
+    return render(request, 'admin_temp/dashboard.html', context)
 
 
 def user_management(request):
     if not request.session.get('is_admin', False):
          return redirect('home')
     users = UserProfile.objects.all()
-    return render(request, 'admin/user.html', {'users': users})
+    return render(request, 'admin_temp/user.html', {'users': users})
 
 
 def toggle_block_user(request, user_id):
@@ -119,7 +119,7 @@ def event_list(request):
       
         return redirect('home')
     events = Event.objects.all() 
-    return render(request, 'admin/event.html', {'events': events})
+    return render(request, 'admin_temp/event.html', {'events': events})
 def subscription_list(request):
     if not request.session.get('is_admin', False):
        
@@ -131,7 +131,7 @@ def subscription_list(request):
     for subscription in subscriptions:
         subscription.end_date = subscription.date + timedelta(days=30)
 
-    return render(request, 'admin/Subscription.html', {
+    return render(request, 'admin_temp/Subscription.html', {
         'subscriptions': subscriptions,
         'now': now
     })
@@ -141,10 +141,10 @@ def ticket_list(request):
        
         return redirect('home')
     tickets = EventTicket.objects.select_related('user_profile', 'event').all()
-    return render(request, 'admin/event_ticket.html', {'event_tickets': tickets})
+    return render(request, 'admin_temp/event_ticket.html', {'event_tickets': tickets})
 
 
 def admin_logout_view(request):
   
     request.session.flush()
-    return redirect("/site_admin/login/")
+    return redirect("/site_admin/site_login/")
