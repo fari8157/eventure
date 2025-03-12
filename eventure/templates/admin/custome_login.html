@@ -92,7 +92,7 @@
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   
       // Send JSON login request
-      fetch('/site_admin/login/', {
+      fetch('/site_admin/site_login/', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
